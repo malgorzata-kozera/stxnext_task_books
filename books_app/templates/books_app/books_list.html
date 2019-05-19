@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+{% extends 'books_app/base.html' %}
+{% load crispy_forms_tags %
+{% load my_tags %}
+
+{% block content %}
+
+<!--Filter form section START -->
+<div class="forms">
+
+<form method="GET">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+  <div class="form-group">
+    <label for="inputAuthor">Author</label>
+    <input type="text" class="form-control" id="inputAuthor" placeholder="Author name" name="author_contains">
+  </div>
+
+      <label for="inputCategory">Category</label>
+      <select id="inputCategory" class="form-control" name="category_contains">
+        <option selected></option>
+          {% for x in categories %}
+            <option value="{{x.category_name}}">{{x.category_name}}</option>
+          {% endfor %}
+      </select>
+        <div class="button">
+  <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+	</div>
+  </div>
+
+</form>
+
+</div>
+
+<!--Filter form section END -->
+<!--BOOKS LIST START -->
+<div class="content">
+    {% if books_list %}
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Authors</th>
+              <th>Categories</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in books_list %}
+              <tr>
+                <td>{{ book.title }}</td>
+                <td>
+                    <ul>
+                        {%for author in book.get_authors %}
+                                <li>{{ author }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        {% for category in book.get_categories %}
+                                <li>{{ category }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                 <td>{{book.description}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    {% else %}
+
+    <p>No books are available</p>
+
+
+{% endif %}
+</div>
+<!--BOOKS LIST END -->
+
+<!--PAGINATION START -->
+
+	{% if is_paginated %}
+
+			{% if page_obj.has_previous %}
+				<a class="btn btn outline-info mb-4" href="?{% param_replace page=1 %}">First</a>
+				<a class="btn btn outline-info mb-4" href="?{% param_replace page=page_obj.previous_page_number %}">Previous</a>
+
+			{% endif %}
+
+			{% for num in page_obj.paginator.page_range %}
+				{% if page_obj.number == num %}
+					<a class="btn btn-info mb-4" href="?{% param_replace page=num %}">{{num}}</a>
+				{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3'%}
+					<a class="btn btn-outline-info mb-4" href="?{% param_replace page=num %}">{{num}}</a>
+				{% endif %}
+			{% endfor %}
+			{% if page_obj.has_next %}
+				<a class="btn btn outline-info mb-4" href="?{% param_replace page=page_obj.next_page_number %}">Next</a>
+				<a class="btn btn outline-info mb-4" href="?{% param_replace page=paginator.num_pages %}">Last</a>
+
+			{% endif %}
+
+		{% endif%}
+
+<!--PAGINATION END -->
+{% endblock content %}
