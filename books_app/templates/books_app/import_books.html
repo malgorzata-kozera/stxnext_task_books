@@ -5,8 +5,8 @@
 {% block content %}
 
 <h1> Import books from google API into Books Collection </h1>
-<h5>Please enter keywords for books that you wont to import from google API.
-    Next press 'Import books' and save data into Books' Collection data base </h5>
+<h5>Please enter keywords for books that you want to import from google API.
+    Next press 'Import books' and save data into Books' Collection database </h5>
 
 <form action="{% url 'import_books' %}" method="POST">
     {% csrf_token %}
