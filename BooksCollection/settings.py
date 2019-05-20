@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.herokuapp.com', 'https://www.heroku.com']
+ALLOWED_HOSTS = ['.herokuapp.com','https://www.heroku.com']
 
 
 # Application definition
@@ -133,5 +133,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 django_heroku.settings(locals())

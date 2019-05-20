@@ -23,7 +23,7 @@ class BooksListView(ListView):
     """
     Create list of all books from database in alphabetical order.
     Books List beside of titles contains book's author(s), category(ies)
-     and description.It allows to filter results by category and/or author.
+    and description.It allows to filter results by category and/or author.
 
     """
     model = Book
@@ -73,7 +73,7 @@ class BooksListView(ListView):
 class AddBook(View):
     """
     Add new book. If book's author already exist it will take it
-    from the data base if not it willadd new author into data base.
+    from the data base if not it will add new author into database.
     The same with the category.
     :return Book instance
 
@@ -132,7 +132,7 @@ class BooksViewSet(viewsets.ModelViewSet):
 class ImportBookView(View):
     """
     Import new books from google API
-    and save it in to the Books' Collection data base.
+    and save it in to the Books' Collection database.
 
     """
     template_name = 'books_app/import_books.html'
@@ -154,8 +154,8 @@ class ImportBookView(View):
                 if r.status_code == 200:
                     result = r.json()
 
+                    # Check if book's is already in database
                     for item in result['items']:
-                        # Check if book's is already in database
                         if Book.objects.filter(
                                 title=item['volumeInfo']['title']):
                             messages.warning(
@@ -174,18 +174,14 @@ class ImportBookView(View):
                                     book.description = item['volumeInfo']['description']
                                 book.save()
                                 for author in item['volumeInfo']['authors']:
-
                                     aut = Author.objects.get_or_create(
                                         name=author)[0]
                                     book.author.add(aut)
-
                                 if 'categories' in item['volumeInfo']:
                                     for category in item['volumeInfo']['categories']:
-
                                         cat = Category.objects.get_or_create(
                                             category_name=category)[0]
                                         book.category.add(cat)
-
                     messages.success(request,
                                      'New books have been imported from API')
                     return redirect('books_list')
@@ -194,8 +190,6 @@ class ImportBookView(View):
                     messages.warning(request, 'Could not connect to the API')
                     print('Could not connect to the API.')
                     exit()
-                    messages.warning(request, 'Could not connect to the API')
-
                     return render(request,
                                   'books_app/import_books.html',
                                   {'form': form})
