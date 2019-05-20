@@ -1,15 +1,15 @@
-import requests
 import logging
+import requests
 import sys
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.http import Http404
-from .models import Book, Author, Category
-from .forms import AddBookForm, ImportBooksForm
 from django.views.generic.list import ListView
-from rest_framework import viewsets
-from .serializer import BookSerializer
 from django.contrib import messages
+from rest_framework import viewsets
+from .forms import AddBookForm, ImportBooksForm
+from .models import Book, Author, Category
+from .serializer import BookSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ class BooksListView(ListView):
             else:
                 is_empty = not self.object_list
             if is_empty:
-                raise Http404(_(
+                raise Http404((
                     "Empty list and '%(class_name)s.allow_empty' is False.") % {
                     'class_name': self.__class__.__name__,
                 })
@@ -111,12 +111,12 @@ class AddBook(View):
                 category_object.save()
                 new_book.category.add(category_object)
             new_book.save()
-            logger.debug(f"created '{new_book}' - new Book object with values \
-                          as: title: {title}, \
-                          author: {author}, category: {category},\
-                         description: {description}")
-            messages.success(request, 'New book has been added')
+            logger.debug(f"created '{new_book}' -new Book object with values\n\
+            as: title: {title}, \n\
+            author: {authors}, category: {categories},\n\
+            description: {description}")
 
+            messages.success(request, 'New book has been added')
         return redirect('books_list')
 
 
@@ -155,7 +155,7 @@ class ImportBookView(View):
                     result = r.json()
 
                     for item in result['items']:
-                        # Check if book's title is already in database
+                        # Check if book's is already in database
                         if Book.objects.filter(
                                 title=item['volumeInfo']['title']):
                             messages.warning(
@@ -198,4 +198,4 @@ class ImportBookView(View):
 
                     return render(request,
                                   'books_app/import_books.html',
-                                  {'form': form })
+                                  {'form': form})
