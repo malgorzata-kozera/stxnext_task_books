@@ -51,8 +51,9 @@ class BooksListView(ListView):
                 self.queryset = Book.objects.prefetch_related('author')
 
         self.object_list = self.get_queryset()
-        allow_empty = self.get_allow_empty()
 
+        # fixing pagination the queryset, after overwriting LisView.
+        allow_empty = self.get_allow_empty()
         if not allow_empty:
             if self.get_paginate_by(self.object_list) is not None and hasattr(
                     self.object_list, 'exists'):
@@ -154,7 +155,7 @@ class ImportBookView(View):
                 if r.status_code == 200:
                     result = r.json()
 
-                    # Check if book's is already in database
+                    # Checking if book's is already in database
                     for item in result['items']:
                         if Book.objects.filter(
                                 title=item['volumeInfo']['title']):
@@ -165,7 +166,7 @@ class ImportBookView(View):
                                           'books_app/import_books.html',
                                           {'form': form})
                         else:
-                            # Create Book's object with suitable fields
+                            # Creating Book's object with suitable fields
                             # imported from google API
                             if 'authors' in item['volumeInfo']:
                                 book = Book()
